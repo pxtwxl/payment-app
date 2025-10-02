@@ -1,0 +1,70 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.env
+.env.*
+.DS_Store
+
+# Expo/React Native
+.expo/
+.expo-shared/
+*.expo
+*.expo-shared
+*.log
+*.lock
+*.tmp
+*.bak
+*.swp
+*.swo
+*.idea/
+*.vscode/
+
+# Java/Maven
+**/target/
+**/.classpath
+**/.project
+**/.settings/
+**/bin/
+**/out/
+**/build/
+**/generated-sources/
+**/generated-test-sources/
+**/.mvn/
+**/mvnw*
+**/pom.xml.tag
+**/pom.xml.releaseBackup
+**/pom.xml.versionsBackup
+**/pom.xml.next
+**/application.properties
+**/dependency-reduced-pom.xml
+**/buildNumber.properties
+**/.DS_Store
+
+# OS/Editor
+Thumbs.db
+Desktop.ini
+*.iml
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.swo
+
+# Misc
+*.log
+*.bak
+*.tmp
+*.zip
+
+# Ignore asset build outputs
+mobile/assets/build/
+
+# Ignore coverage reports
+coverage/
+**/coverage/
+
+# Ignore IDE folders
+.idea/
+.vscode/

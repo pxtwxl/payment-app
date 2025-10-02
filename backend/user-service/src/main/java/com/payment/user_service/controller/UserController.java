@@ -1,0 +1,64 @@
+package com.payment.user_service.controller;
+
+import com.payment.user_service.model.DTO.UserForm;
+import com.payment.user_service.model.User;
+import com.payment.user_service.service.JwtService;
+import com.payment.user_service.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    @Autowired
+    private UserService service;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @PostMapping("register")
+    public ResponseEntity<String> register(@RequestBody User user) {
+        return service.createUser(user);
+    }
+
+    @PostMapping("login")
+    public String login(@RequestBody User user) throws Exception {
+
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword()));
+
+        if(authentication.isAuthenticated())
+            return jwtService.generateToken(user.getEmail());
+        else
+            return "Login Failed";
+    }
+
+    @PostMapping("create")
+    public ResponseEntity<String> createUser(@RequestBody UserForm user) {
+        return service.saveUserForm(user);
+    }
+
+    @PostMapping("createPin/{email}/{newPinCode}")
+    public ResponseEntity<String> createPin(@PathVariable("email") String email, @PathVariable("newPinCode") int newPinCode) {
+        return service.createPin(email,newPinCode);
+    }
+
+    @GetMapping("getPin/{email}")
+    public ResponseEntity<Integer> getPin(@PathVariable("email") String email) {
+        return service.fetchPin(email);
+    }
+
+    @GetMapping("getUpiId/{email}")
+    public ResponseEntity<String> getUpiId(@PathVariable("email") String email) {
+        return service.fetchUPI(email);
+    }
+}
