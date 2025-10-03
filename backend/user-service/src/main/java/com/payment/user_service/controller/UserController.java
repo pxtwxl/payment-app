@@ -61,4 +61,14 @@ public class UserController {
     public ResponseEntity<String> getUpiId(@PathVariable("email") String email) {
         return service.fetchUPI(email);
     }
+
+    @GetMapping("fetchBalance/{email}")
+    public ResponseEntity<Double> fetchBalance(@PathVariable("email") String email) {
+        return service.fetchBalance(email);
+    }
+
+    @GetMapping("validate/{upiId}")
+    public ResponseEntity<Boolean> getValidation(@PathVariable("upiId") String upiId) {
+        return service.getValidation(upiId);
+    }
 }

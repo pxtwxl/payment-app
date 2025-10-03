@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface Bank2Repo extends JpaRepository<Bank2,Long> {
+    Bank2 findByCustomerUpiId(String upi);
 }

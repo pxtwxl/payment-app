@@ -14,7 +14,7 @@ public class Bank2 {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long accountId;
 
-    private final String bankName = "Bank2";
+    private final String bankName = "Bank B";
 
     private String customerName;
 
@@ -24,7 +24,7 @@ public class Bank2 {
     @Column(unique = true)
     private long customerPhone;
     private int customerPin;
-    private long customerBalance;
+    private double customerBalance;
 
     @Column(unique = true)
     private long customerAccountNo;
@@ -74,11 +74,11 @@ public class Bank2 {
         this.customerPin = customerPin;
     }
 
-    public long getCustomerBalance() {
+    public double getCustomerBalance() {
         return customerBalance;
     }
 
-    public void setCustomerBalance(long customerBalance) {
+    public void setCustomerBalance(double customerBalance) {
         this.customerBalance = customerBalance;
     }
 

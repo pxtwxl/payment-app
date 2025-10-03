@@ -25,7 +25,18 @@ export default function SetupAccount() {
     setEmail(primaryEmail)
   }, [user])
 
+  const getUpiSuffix = (bank) => {
+    switch (bank) {
+      case 'Bank A': return '@bankA'
+      case 'Bank B': return '@bankB'
+      default: return '@bank'
+    }
+  }
+
   const handleSubmit = async () => {
+    const upiSuffix = getUpiSuffix(bankName);
+    const fullUpiId = `${upiId}${upiSuffix}`;
+
     const formData = {
       email,
       name: fullName,
@@ -34,18 +45,18 @@ export default function SetupAccount() {
       bankName,
       bankAccount,
       bankIfsc,
-      upiId,
+      upiId: fullUpiId,
     };
+
     try {
-      const response = await api.post('http://192.168.0.24:8091/user/create', formData);
-      // You can handle response here, e.g. show success or save token
-      alert('Payment account setup successful!');
-      router.replace('/');
+      const response = await api.post("http://192.168.0.24:8091/user/create", formData);
+      alert("Payment account setup successful!");
+      router.replace("/");
     } catch (err) {
-      alert('Failed to setup account. Please try again.');
-      console.error('Setup account error:', err?.response?.data || err.message);
+      alert("Failed to setup account. Please try again.");
+      console.error("Setup account error:", err?.response?.data || err.message);
     }
-  }
+  };
 
   return (
     <ScrollView style={{ padding: 20 }}>
@@ -71,7 +82,7 @@ export default function SetupAccount() {
       />
 
       <Text>Email</Text>
-      <TextInputx
+      <TextInput
         value={email}
         editable={false}
         selectTextOnFocus={false}
@@ -126,11 +137,25 @@ export default function SetupAccount() {
       <Text>UPI ID</Text>
       <TextInput
         value={upiId}
-        onChangeText={setUpiId}
-        placeholder="Enter UPI ID"
+        onChangeText={(text) => {
+          // Remove any suffix the user types manually
+          const cleanPrefix = text.split("@")[0];
+          setUpiId(cleanPrefix);
+        }}
+        placeholder="Enter UPI prefix"
         autoCapitalize="none"
-        style={{ borderWidth: 1, padding: 8, marginBottom: 20, borderRadius: 5 }}
+        style={{
+          borderWidth: 1,
+          padding: 8,
+          marginBottom: 20,
+          borderRadius: 5,
+        }}
       />
+
+      {/* Display full UPI ID with suffix */}
+      <Text style={{ marginBottom: 20, color: "gray" }}>
+        Your UPI ID will be: {upiId || "________"}{getUpiSuffix(bankName)}
+      </Text>
 
       <TouchableOpacity
         onPress={handleSubmit}

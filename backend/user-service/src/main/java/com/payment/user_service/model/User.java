@@ -1,9 +1,13 @@
 package com.payment.user_service.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.List;
 
 @Data
 @Entity(name = "users")
@@ -32,13 +36,21 @@ public class User {
     private String email;
     private String password;
 
-    private long balance;
+    private double balance;
 
-    public long getBalance() {
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Payment> payments;
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(long balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 

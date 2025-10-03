@@ -71,6 +71,7 @@ public class UserService {
             userRes.setBankName(user.getBankName());
             userRes.setBankIfsc(user.getBankIfsc());
             userRes.setUpiId(user.getUpiId());
+            userRes.setBalance(100000.00);
 
             repo.save(userRes);
             return new ResponseEntity<>("User Saved Success",HttpStatus.OK);
@@ -91,5 +92,31 @@ public class UserService {
             e.printStackTrace();
         }
         return new ResponseEntity<>("No UPI ID",HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<Double> fetchBalance(String email) {
+        try {
+            User user = repo.findByEmail(email);
+            if(user == null)
+                throw new RuntimeException("user not found");
+
+            return new ResponseEntity<>(user.getBalance(),HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(0.00,HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<Boolean> getValidation(String upiId) {
+        try {
+            User payee = repo.findByUpiId(upiId);
+            if(payee == null)
+                throw new RuntimeException("user not found");
+
+            return new ResponseEntity<>(true,HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
     }
 }

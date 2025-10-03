@@ -15,6 +15,7 @@ import { styles as istyles } from "@/assets/styles/auth.styles.js";
 import { SignOutButton } from "@/components/SignOutButton";
 import { useRouter } from "expo-router";
 
+
 const { width } = Dimensions.get("window");
 
 function ProfileMenu({ router }) {
@@ -104,10 +105,10 @@ export default function Home() {
         {/* Money Transfers Section */}
         <Text style={styles.sectionTitle}>Money Transfers</Text>
         <View style={styles.row}>
-          <ActionButton icon="call-outline" label="To Mobile Number" />
-          <ActionButton icon="business-outline" label="To Bank UPI ID" />
+          <ActionButton icon="call-outline" label="To Mobile Number" onPress={() => router.push('/pay-to-user')} />
+          <ActionButton icon="business-outline" label="To Bank UPI ID" onPress={() => router.push('/pay-to-user')} />
           <ActionButton icon="qr-code-outline" label="Scan QR & Pay" onPress={() => router.push('/scan-qr')} />
-          <ActionButton icon="wallet-outline" label="Check Balance" />
+          <ActionButton icon="wallet-outline" label="Check Balance" onPress={() => router.push('/check-balance')} />
         </View>
 
         {/* 🔥 Slideshow Banner Section */}

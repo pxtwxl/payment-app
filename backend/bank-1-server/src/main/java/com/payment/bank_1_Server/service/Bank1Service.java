@@ -20,8 +20,6 @@ public class Bank1Service {
             if(bank1.getBankName() != user.getBankName())
                 throw new RuntimeException("Bank MisMatch");
 
-            bank1.setCustomerMail(user.getEmail());
-            bank1.setCustomerPassword(user.getPassword());
             bank1.setCustomerAddress(user.getAddress());
             bank1.setCustomerName(user.getName());
             bank1.setCustomerBalance(user.getBalance());
