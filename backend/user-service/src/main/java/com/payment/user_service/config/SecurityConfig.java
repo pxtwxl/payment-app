@@ -45,17 +45,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable());
 
-        http.csrf(customizer -> customizer.disable());
-        http.cors(Customizer.withDefaults()); // Enable CORS with custom config
+        // 🔑 Disable CORS at Spring Security level
+        http.cors(cors -> cors.disable());
+
         http.authorizeHttpRequests(request -> request
-                .requestMatchers("/user/register" , "/user/login","user/login","user/register")
+                .requestMatchers("/user/register", "/user/login")
                 .permitAll()
                 .anyRequest().authenticated());
 
-//        http.formLogin(Customizer.withDefaults());
         http.httpBasic(Customizer.withDefaults());
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        http.sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -70,11 +72,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(Arrays.asList(
-                "http://192.168.0.24:8081",   // Expo web
-                "http://localhost:8081",
-                "exp://192.168.0.24:8081"  // Expo dev app
-        ));
+        corsConfig.setAllowedOriginPatterns(Arrays.asList("*")); // allow all for mobile apps
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfig.setAllowedHeaders(Arrays.asList("*"));
         corsConfig.setAllowCredentials(true);
