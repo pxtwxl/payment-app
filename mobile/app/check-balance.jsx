@@ -24,20 +24,21 @@ export default function CheckBalance() {
     setLoading(true);
     try {
       // Get userPin from backend
-      const pinRes = await api.get(`http://192.168.0.24:8091/user/getPin/${encodeURIComponent(email)}`);
-      const backendPin = pinRes.data;
-      if (!backendPin) {
+      const payPin = userPin
+      const pinRes = await api.get(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/validatePin/${encodeURIComponent(email)}/${encodeURIComponent(payPin)}`);
+      const pinMatchResult = pinRes.data;
+      if (!pinMatchResult) {
         Alert.alert("Error", "No PIN found for this user.");
         setLoading(false);
         return;
       }
-      if (userPin !== backendPin.toString()) {
-        Alert.alert("Error", "Incorrect PIN. Please try again.");
-        setLoading(false);
-        return;
-      }
+    //   if (userPin !== backendPin.toString()) {
+    //     Alert.alert("Error", "Incorrect PIN. Please try again.");
+    //     setLoading(false);
+    //     return;
+    //   }
       // If PIN matches, fetch balance
-      const balanceRes = await api.get(`http://192.168.0.24:8091/user/fetchBalance/${email}`);
+      const balanceRes = await api.get(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/fetchBalance/${email}`);
       if (balanceRes.data)
         setBalance(balanceRes.data);
     } catch (err) {

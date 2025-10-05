@@ -14,6 +14,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -93,5 +95,24 @@ public class PaymentService {
         }
 
         return new ResponseEntity<>("Not found",HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<List<Payment>> fetchHistory(String email) {
+        try {
+            User payer = userRepo.findByEmail(email);
+            if(payer.getPayments().isEmpty())
+                throw new RuntimeException("empty payments");
+
+            List<Payment> payments = payer.getPayments()
+                    .stream()
+                    .sorted((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt())) // latest first
+                    .toList();
+
+            return new ResponseEntity<>(payments,HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(new ArrayList<>(),HttpStatus.BAD_REQUEST);
     }
 }

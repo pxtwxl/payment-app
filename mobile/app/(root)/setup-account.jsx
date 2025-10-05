@@ -49,7 +49,7 @@ export default function SetupAccount() {
     };
 
     try {
-      const response = await api.post("http://192.168.0.24:8091/user/create", formData);
+      const response = await api.post(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/create`, formData);
       alert("Payment account setup successful!");
       router.replace("/");
     } catch (err) {

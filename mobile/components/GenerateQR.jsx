@@ -16,7 +16,7 @@ export default function GenerateQR() {
     const loadUpi = async () => {
       try {
         if (!email) return;
-        const res = await api.get(`http://192.168.0.24:8091/user/getUpiId/${encodeURIComponent(email)}`);
+        const res = await api.get(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/getUpiId/${encodeURIComponent(email)}`);
         setUpiId(res?.data || "");
       } catch (e) {
         Alert.alert("Error", "Unable to fetch UPI ID");

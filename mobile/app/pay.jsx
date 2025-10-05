@@ -31,31 +31,54 @@ export default function PayScreen() {
     try {
       const email = user?.primaryEmailAddress?.emailAddress
 
-      // Verify PIN first
-      const pinRes = await api.get(`http://192.168.0.24:8091/user/getPin/${encodeURIComponent(email)}`)
-      const backendPin = pinRes.data
-      if (!backendPin) {
-        Alert.alert('Error', 'No PIN found for this user.')
-        return
-      }
-      if (userPin !== backendPin.toString()) {
-        Alert.alert('Error', 'Incorrect PIN. Please try again.')
-        return
-      }
+       const payPin = userPin
+        const pinRes = await api.get(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/validatePin/${encodeURIComponent(email)}/${encodeURIComponent(payPin)}`);
+        const pinMatchResult = pinRes.data;
+        if (!pinMatchResult) {
+          Alert.alert("Error", "No PIN found for this user.");
+          setLoading(false);
+          return;
+        }
+      // if (userPin !== backendPin.toString()) {
+      //   Alert.alert('Error', 'Incorrect PIN. Please try again.')
+      //   return
+      // }
 
       // PIN verified, proceed with payment
-      const payerUpi = await api.get(`http://192.168.0.24:8091/user/getUpiId/${encodeURIComponent(email)}`)
+      const payerUpi = await api.get(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/getUpiId/${encodeURIComponent(email)}`)
       setLoading(true)
+        // console.log("[Anuj]upi Id:", upiId)
+        if(upiId?.includes("bank") === false) {
+          let phone = upiId;
+          console.log("[Anuj]upi Id:", phone)
+          let phoneRes = await api.get(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/getUpiByPhone/${encodeURIComponent(phone)}`)
+          if(phoneRes.data === "Invalid") {
+            setLoading(false)
+            Alert.alert('Error', 'No UPI ID found for this phone number.')
+            return
+          }
 
-      const response = await api.post('http://192.168.0.24:8091/payments/initiate', {
-        fromVpa: payerUpi.data,
-        toVpa: upiId,
-        amount: Number(amount),
-      })
+          const response = await api.post(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/payments/initiate`, {
+            fromVpa: payerUpi.data,
+            toVpa: phoneRes.data,
+            amount: Number(amount),
+          })
 
-      // Save requestId for polling
-      const payment = response.data
-      setPaymentId(payment.requestId)
+          // Save requestId for polling
+          const payment = response.data
+          setPaymentId(payment.requestId)
+      } else {
+        const response = await api.post(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/payments/initiate`, {
+          fromVpa: payerUpi.data,
+          toVpa: upiId,
+          amount: Number(amount),
+        })
+
+        // Save requestId for polling
+        const payment = response.data
+        setPaymentId(payment.requestId)
+      }
+
 
     } catch (err) {
       setLoading(false)
@@ -71,7 +94,7 @@ export default function PayScreen() {
       const requestId = paymentId
       interval = setInterval(async () => {
         try {
-          const res = await api.get(`http://192.168.0.24:8091/payments/status/${requestId}`)
+          const res = await api.get(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/payments/status/${requestId}`)
           const status = res.data
           if (status && status !== 'PENDING') {
             clearInterval(interval)

@@ -66,7 +66,7 @@ export default function SignUpScreen() {
         await setActive({ session: signUpAttempt.createdSessionId })
         // Call backend register API
         try {
-          const response = await api.post('http://192.168.0.24:8091/user/register', {
+          const response = await api.post(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/register`, {
             email: emailAddress,
             password,
           });

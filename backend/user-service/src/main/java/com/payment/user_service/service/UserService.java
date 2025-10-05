@@ -119,4 +119,46 @@ public class UserService {
         }
         return new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
     }
+
+    public ResponseEntity<Boolean> validatePin(String email,int payPin) {
+        try {
+            User payeeAcc = repo.findByEmail(email);
+            if(payeeAcc.getPayPin() != payPin)
+                throw new RuntimeException("wrong pin");
+
+            return new ResponseEntity<>(true,HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<Boolean> validatePhone(Long phone) {
+        try {
+            User payee = repo.findByPhone(phone);
+            if(payee == null)
+                throw new RuntimeException("user not found");
+
+            return new ResponseEntity<>(true,HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(false,HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<String> getUpiIdfromPhone(String phone) {
+        try {
+            long phoneNumber = Long.parseLong(phone);
+            User payee = repo.findByPhone(phoneNumber);
+            if(payee.getUpiId().isEmpty() && payee.getUpiId() == null)
+                throw new Exception("not found");
+
+            return new ResponseEntity<>(payee.getUpiId(),HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Invalid",HttpStatus.BAD_REQUEST);
+    }
 }

@@ -21,7 +21,7 @@ export default function CreatePin() {
     const init = async () => {
       try {
         if (!email) return;
-        const res = await api.get(`http://192.168.0.24:8091/user/getPin/${encodeURIComponent(email)}`);
+        const res = await api.get(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/getPin/${encodeURIComponent(email)}`);
         const serverPin = res?.data;
         if (serverPin) {
           setExistingPin(String(serverPin));
@@ -60,7 +60,7 @@ export default function CreatePin() {
         return;
       }
       const newPinCode = parseInt(newPin, 10);
-      const resp = await api.post(`http://192.168.0.24:8091/user/createPin/${encodeURIComponent(email)}/${newPinCode}`);
+      const resp = await api.post(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/createPin/${encodeURIComponent(email)}/${newPinCode}`);
       if (resp.status >= 400) {
         console.log("Create PIN error:", resp.status, resp.data);
         Alert.alert("Error", typeof resp.data === 'string' ? resp.data : "Failed to set PIN.");

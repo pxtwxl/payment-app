@@ -4,6 +4,7 @@ import com.payment.user_service.model.DTO.UserForm;
 import com.payment.user_service.model.User;
 import com.payment.user_service.service.JwtService;
 import com.payment.user_service.service.UserService;
+import feign.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,11 @@ public class UserController {
         return service.fetchPin(email);
     }
 
+    @GetMapping("validatePin/{email}/{payPin}")
+    public ResponseEntity<Boolean> validatePin(@PathVariable("email") String email,@PathVariable("payPin") String payPin) {
+        return service.validatePin(email,Integer.parseInt(payPin));
+    }
+
     @GetMapping("getUpiId/{email}")
     public ResponseEntity<String> getUpiId(@PathVariable("email") String email) {
         return service.fetchUPI(email);
@@ -70,5 +76,15 @@ public class UserController {
     @GetMapping("validate/{upiId}")
     public ResponseEntity<Boolean> getValidation(@PathVariable("upiId") String upiId) {
         return service.getValidation(upiId);
+    }
+
+    @GetMapping("getUpiByPhone/{phone}")
+    public ResponseEntity<String> getUpiIdFromPhone(@PathVariable("phone") String phone) {
+        return service.getUpiIdfromPhone(phone);
+    }
+
+    @GetMapping("validatePhone/{phone}")
+    public ResponseEntity<Boolean> validatePhone(@PathVariable("phone") String phone) {
+        return service.validatePhone(Long.parseLong(phone));
     }
 }

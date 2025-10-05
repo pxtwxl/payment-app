@@ -28,7 +28,23 @@ export default function PayToUser() {
     setVerified(false);
     if (method === "upi") {
       try {
-        const res = await api.get(`http://192.168.0.24:8091/user/validate/${encodeURIComponent(upiId)}`);
+        const res = await api.get(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/validate/${encodeURIComponent(upiId)}`);
+        if (res.data) {
+          setVerified(true);
+          Alert.alert("Verified", "UPI ID exists and is connected to a bank account.");
+        } else {
+          setVerified(false);
+          Alert.alert("Not Verified", "UPI ID does not exist.");
+        }
+      } catch (err) {
+        setVerified(false);
+        Alert.alert("Error", err?.response?.data?.message || "Failed to verify UPI ID.");
+      }
+      setVerifying(false);
+      return;
+    } else if (method === "phone") {
+      try {
+        const res = await api.get(`${process.env.EXPO_PUBLIC_BASE_API_URL}/USER-SERVICE/user/validatePhone/${encodeURIComponent(phone)}`);
         if (res.data) {
           setVerified(true);
           Alert.alert("Verified", "UPI ID exists and is connected to a bank account.");
