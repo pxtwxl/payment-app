@@ -4,6 +4,9 @@
 
 Payment App is a full-stack digital payment solution designed to enable secure, fast, and user-friendly money transfers, bill payments, and account management. The project consists of a mobile frontend (React Native/Expo) and a backend (Java Spring Boot microservices) supporting user authentication, payment processing, and banking operations.
 
+<img width="3272" height="1533" alt="UPI_system" src="https://github.com/user-attachments/assets/62cde97b-47b6-4e1b-be6c-f1cecbff61e0" />
+
+
 ## Features
 
 - **User Authentication:** Secure sign-in/sign-up using Clerk and PIN verification.
